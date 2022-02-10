@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 app.use(cors({
     origin:["http://localhost:3000"],
-    methods:["Get","Post","DELETE","PUT","put","patch"],
+    methods:["Get","Post","DELETE","PUT","put","PATCH","patch"],
     credentials:true
 }));
 app.use(cookieParser())
@@ -302,6 +302,7 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
         office_no,phone,request_type,problem_desc,status,Date1],(err,result)=>{
             if (err){
                res.send({Message:"Error"})
+               console.log(err)
             }
             if(result){
                 res.send({Message:"Success"})
@@ -483,6 +484,24 @@ app.put('/finishTask/:request_id',(req,res)=>{
         res.send(result)
     })
 })
+//Send Satisfaction 
+app.put('/SendSatsfaction/:request_id',(req,res)=>{
+    const taskid=req.params.request_id
+    const satisfaction=req.body.satisfaction
+    const satquery='update request set satisfaction=? where request_id=?'
+    Connection.query(satquery,[satisfaction,taskid],(err,result)=>{
+        if(err){
+            res.send({Message:'error'})
+            console.log(err)
+        
+        } if(result){
+            res.send({Message:"success"})
+            
+        }
+        
+    })
+})
+//Get progress task by user
  app.get('/GetProgressTaskbyUser/:username',(req,res)=>{
     const progreassTask='select * from request where  status="OnProgress"'
     Connection.query(progreassTask,(err,result)=>{
@@ -509,4 +528,3 @@ app.get('/performance',(req,res)=>{
         res.send(result)
     })
 })
-  
