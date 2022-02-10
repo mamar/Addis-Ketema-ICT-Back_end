@@ -485,7 +485,7 @@ app.put('/finishTask/:request_id',(req,res)=>{
     })
 })
 //Send Satisfaction 
-app.put('/SendSatsfaction/:request_id',(req,res)=>{
+app.patch('/SendSatsfaction/:request_id',(req,res)=>{
     const taskid=req.params.request_id
     const satisfaction=req.body.satisfaction
     const satquery='update request set satisfaction=? where request_id=?'
