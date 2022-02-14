@@ -485,8 +485,8 @@ app.put('/finishTask/:request_id',(req,res)=>{
     })
 })
 //Send Satisfaction 
-app.patch('/SendSatsfaction/:request_id',(req,res)=>{
-    const taskid=req.params.request_id
+app.put('/SendSatsfaction/:requestid',(req,res)=>{
+    const taskid=req.params.requestid
     const satisfaction=req.body.satisfaction
     const satquery='update request set satisfaction=? where request_id=?'
     Connection.query(satquery,[satisfaction,taskid],(err,result)=>{
@@ -496,6 +496,7 @@ app.patch('/SendSatsfaction/:request_id',(req,res)=>{
         
         } if(result){
             res.send({Message:"success"})
+            console.log(result)
             
         }
         
