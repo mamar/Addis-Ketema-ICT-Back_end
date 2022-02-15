@@ -120,6 +120,32 @@ app.post('/Login',(req,res)=>{
         }
     })
 })
+//
+app.put('/blockuser/:userid',(req,res)=>{
+    const userid=req.params.userid
+    const blockuser='update users set status="block" where userid=? '
+    Connection.query(blockuser,[userid],(err,result)=>{
+        if(result){
+            res.send({Message:'blocked'})
+        }else{
+            res.send({Message:"allready blocked"})
+        }
+    })
+
+})
+app.put('/unblockuser/:userid',(req,res)=>{
+    const userid=req.params.userid
+    const unblockuser='update users set status="unblock" where userid=? and status="block"'
+    Connection.query(unblockuser,[userid],(err,result)=>{
+        if(result){
+            res.send({Message:'ublocked'})
+        }else{
+            res.send({Message:"repition"})
+        }
+    })
+
+})
+
 //Logout
 app.get('/logout',(req,res) => {
     res.clearCookie(cookieName)
@@ -169,10 +195,14 @@ app.post('/Register',(req,res)=>{
 })
 //Get All users
 app.get('/Getusers',(req,res)=>{
-    const getuser='select u.userid, o.office_name ,u.username,u.ROLES,u.user_fullname,u.age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id'
+    const getuser='select u.userid,u.status, o.office_name ,u.username,u.ROLES,u.user_fullname,u.age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id'
     Connection.query(getuser,(err,result)=>{
-        if(err) throw err
-        res.send(result)
+        if(err){
+            res.send("error")
+        } if(result){
+            res.send(result)
+        }
+        
     })
 })
 //Get users by id
@@ -181,8 +211,12 @@ app.get('/Getuserbyusername',(req,res)=>{
     const user=  req.session.user[0].username
     const getuserbyid='select * from users where username=?'
     Connection.query(getuserbyid,[user],(err,result)=>{
-        if(err) throw err
-        res.send(result)
+        if(err){
+            res.send('error')
+        } else{
+            res.send(result)
+        }
+      
     })
 
 })
@@ -212,8 +246,10 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
         if(err){
             res.send("Server Errorr")
             
+        }else{
+            res.send("User Deleted Succesfully")
         }
-        res.send("User Deleted Succesfully")
+       
     })
 })
   //CReate office
@@ -302,7 +338,7 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
         office_no,phone,request_type,problem_desc,status,Date1],(err,result)=>{
             if (err){
                res.send({Message:"Error"})
-               console.log(err)
+            
             }
             if(result){
                 res.send({Message:"Success"})
@@ -313,8 +349,13 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
 app.get('/GetAllRequest',(req,res)=>{
     const getrequest='select * from request'
     Connection.query(getrequest,(err,result)=>{
-        if(err) throw err
-        res.send(result)
+        if(err){
+            res.send('error')
+        } else{
+            res.send(result)
+        }
+           
+        
     })
 })
 //get Request by id
@@ -322,8 +363,13 @@ app.get('/GetRequestbyid/:request_id',(req,res)=>{
     const request_id=req.params.request_id
     const getreq='select * from request where request_id=?'
     Connection.query(getreq,[request_id],(err,result)=>{
-        if(err) throw err
-        res.send(result)
+        if(err) {
+            res.send('error')
+        }else{
+            res.send(result)
+        }
+            
+        
     })
 })
 //Delete Request by id
@@ -331,19 +377,25 @@ app.delete('/DeleteRequest/:request_id',(req,res)=>{
     const request_id=req.params.request_id
     const Deletreq='Delete from request where request_id=?'
     Connection.query(Deletreq,[request_id],(err,result)=>{
-        if(err) throw err
-        res.send("Request Delete Successfully")
+        if(err){
+            res.send('error')
+        } else{
+            res.send("Request Delete Successfully")
+        }
+       
     })
     
 
 })
 //Get new Request
 app.get('/GetNewRequest',(req,res)=>{
-    const getrequest='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc from request r,users u  where status="New" and u.username=r.requesterusername'
+    const getrequest='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc from request r,users u  where r.status="New" and u.username=r.requesterusername'
     Connection.query(getrequest,(err,result)=>{
-        if(err) res.send(err)
-     
-        res.send(result)
+        if(err) {
+            res.send("error")
+        }if(result){
+            res.send(result)
+        }                    
     })
 })
 
@@ -351,8 +403,12 @@ app.get('/GetNewRequest',(req,res)=>{
 app.get('/Onprogress',(req,res)=>{
     const getrequest='select * from request where status="Work On Progress"'
     Connection.query(getrequest,(err,result)=>{
-        if(err) throw err
-        res.send(result)
+        if(err){
+            res.send(err)
+        } else{
+            res.send(result)
+        }
+      
     })
 })
 
@@ -465,12 +521,14 @@ app.put('/finishTask/:request_id',(req,res)=>{
 //Progress 
  app.get('/GetProgressTask/:workerusername',(req,res)=>{
      const workerusername=req.params.workerusername
-     const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,r.assignedDate from request r,users u  where status="work on progress " and u.username=r.requesterusername and workerusername=?'
+     const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,r.assignedDate from request r,users u  where r.status="work on progress " and u.username=r.requesterusername and workerusername=?'
      Connection.query(progreassTask,[workerusername],(err,result)=>{
          if(err){
              res.send(err)
+         }else{
+            res.send(result)
          }
-         res.send(result)
+        
      })
  })
 //For Requester
@@ -480,8 +538,10 @@ app.put('/finishTask/:request_id',(req,res)=>{
     Connection.query(progreassTask,[requesterusername],(err,result)=>{
         if(err){
             res.send(err)
+        }else{
+            res.send(result)
         }
-        res.send(result)
+        
     })
 })
 //Send Satisfaction 
@@ -514,17 +574,19 @@ app.put('/SendSatsfaction/:requestid',(req,res)=>{
 
  app.get('/finishedTasksbyUser/:workerusername',(req,res)=>{
     const workerusername=req.params.workerusername
-    const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,r.finishedDate from request r,users u  where status="finished" and u.username=r.requesterusername and workerusername=?'
+    const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,r.Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,r.finishedDate from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=?'
     Connection.query(progreassTask,[workerusername,workerusername],(err,result)=>{
         if(err){
             res.send(err)
           
+        }else{
+            res.send(result)
         }
-        res.send(result)
+      
     })
 })
 app.get('/performance',(req,res)=>{
-    const performance ='select u.user_fullname,(select count(*) as count from request r  where r.workerusername=u.username and r.status="finished")"Finished",  (select count(*) from request r where r.workerusername=u.username and status ="Work On Progress") "Assigned" from users u group  by u.username'
+    const performance ='select u.user_fullname,(select count(*) as count from request r  where r.workerusername=u.username and r.status="finished")"Finished",  (select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress") "Assigned" from users u group  by u.username'
     Connection.query(performance,(err,result)=>{
         res.send(result)
     })
