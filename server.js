@@ -8,6 +8,9 @@ const saltRound=10
 const cookieParser=require('cookie-parser')
 const session=require('express-session')
 const jwt=require('jsonwebtoken')
+const date = require('date-and-time')
+const ethiopianDate = require('ethiopian-date')
+
 
 
  
@@ -124,7 +127,7 @@ app.post('/Login',(req,res)=>{
 app.put('/blockuser/:userid',(req,res)=>{
     const userid=req.params.userid
     const blockuser='update users set status="block" where userid=? '
-    Connection.query(blockuser,[userid],(err,result)=>{
+    Connection.query(blockuser,userid,(err,result)=>{
         if(result){
             res.send({Message:'blocked'})
         }else{
@@ -135,8 +138,8 @@ app.put('/blockuser/:userid',(req,res)=>{
 })
 app.put('/unblockuser/:userid',(req,res)=>{
     const userid=req.params.userid
-    const unblockuser='update users set status="unblock" where userid=? and status="block"'
-    Connection.query(unblockuser,[userid],(err,result)=>{
+    const unblockuser='update users set status="unblock" where userid=? '
+    Connection.query(unblockuser,userid,(err,result)=>{
         if(result){
             res.send({Message:'ublocked'})
         }else{
@@ -161,11 +164,12 @@ app.post('/Register',(req,res)=>{
     const age=req.body.age
     const gender=req.body.Gender
     const position=req.body.Position
-    const date3=new Date()
+    const now=new Date()
+    const date3 = date.format(now,'DD/MM/YYYY HH:mm:ss');
     const phone=req.body.Phone
     const office_id=req.body.office_id
     const usercheck='select username from users where username=?'
-    const Adduser='insert into users(office_id,username,ROLES,password,user_fullname,age,Gender,Position,Phone,Date) values(?,?,?,?,?,?,?,?,?,?)'
+    const Adduser='insert into users(office_id,username,ROLES,password,user_fullname,age,Gender,Position,Phone) values(?,?,?,?,?,?,?,?,?)'
 
     Connection.query(usercheck,[username],(err,result)=>{
         if(result.length >= 1){
@@ -175,9 +179,10 @@ app.post('/Register',(req,res)=>{
                 if(err){
                     res.send({err:"Server Error"})
                 }
-                Connection.query(Adduser,[office_id,username,ROLES,hash,user_fullname,age,gender,position,phone,date3],(err,result)=>{
+                Connection.query(Adduser,[office_id,username,ROLES,hash,user_fullname,age,gender,position,phone],(err,result)=>{
                     if(result){
                         res.send(result)
+                        console.log(date3)
         
                     }else{
                         res.send({err:"Server Error"})
@@ -195,7 +200,7 @@ app.post('/Register',(req,res)=>{
 })
 //Get All users
 app.get('/Getusers',(req,res)=>{
-    const getuser='select u.userid,u.status, o.office_name ,u.username,u.ROLES,u.user_fullname,u.age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id'
+    const getuser='select u.userid,u.status, o.office_name ,u.username,u.ROLES,u.user_fullname,u.Age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id'
     Connection.query(getuser,(err,result)=>{
         if(err){
             res.send("error")
@@ -257,11 +262,13 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
       const office_name=req.body.office_name
       const floor_no=req.body.floor_no
       const phone=req.body.phone
-      const Date2=new Date()
+     const ethioDate= ethiopianDate.toEthiopian(YYYY,MM,DD)
+      const Date2=new Date().getTime()
       const insertoffice='insert into office(office_name,floor_no,phone,Date) values (?,?,?,?)'
       
-      Connection.query(insertoffice,[office_name,floor_no,phone,Date2],(err,result)=>{
+      Connection.query(insertoffice,[office_name,floor_no,phone,ethioDate],(err,result)=>{
           res.send(result);
+          console.log(ethioDate)
          
       })
   })
@@ -327,15 +334,17 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
       const request_type=req.body.request_type
       const problem_desc=req.body.problem_desc
       const status="New"
-      const Date1=new Date()
+      const now=new Date()
+     const Date1 = date.format(now,'DD/MM/YYYY HH:mm:ss');
+      //const Date1=new Date().getTime()
      
       const requesterusername=req.params.requesterusername
      
 
     const addRequest=
-    'Insert into request (requesterusername,division,floor_no,office_no,phone,request_type,problem_desc,status,Date) values(?,?,?,?,?,?,?,?,?)'
+    'Insert into request (requesterusername,division,floor_no,office_no,phone,request_type,problem_desc,status) values(?,?,?,?,?,?,?,?)'
     Connection.query(addRequest,[requesterusername,division,floor_no,
-        office_no,phone,request_type,problem_desc,status,Date1],(err,result)=>{
+        office_no,phone,request_type,problem_desc,status],(err,result)=>{
             if (err){
                res.send({Message:"Error"})
             
@@ -479,7 +488,9 @@ app.get('/CountOthers',(req,res)=>{
 app.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
     const taskid=req.params.request_id
     const workerusername=req.params.workerusername
-    const Date1=new Date()
+    const now=new Date()
+    const Date1 = date.format(now,'YYYY-MM-DD HH:mm:ss');
+    //const Date1=new Date().getTime()
     const assigntaks='update request set status="Work On Progress",assignedDate=?,workerusername=? where request_id=?'
     Connection.query(assigntaks,[Date1,workerusername,taskid],(err,result)=>{
         if(err){
@@ -487,6 +498,7 @@ app.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
             
         } if(result){
             res.send({Message:"Success"})
+            console.log(Date1)
          
         }
         
@@ -495,7 +507,9 @@ app.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
 //finish Task
 app.put('/finishTask/:request_id',(req,res)=>{
     const taskid=req.params.request_id
-    const Date1=new Date()
+    const now=new Date()
+    const Date1 = date.format(now,'DD/MM/YYYY HH:mm:ss');
+    //const Date1=new Date().getTime()
     const assigntaks='update request set status="finished",finishedDate=? where request_id=?'
     Connection.query(assigntaks,[Date1,taskid],(err,result)=>{
         if(err){
@@ -548,8 +562,9 @@ app.put('/finishTask/:request_id',(req,res)=>{
 app.put('/SendSatsfaction/:requestid',(req,res)=>{
     const taskid=req.params.requestid
     const satisfaction=req.body.satisfaction
-    const satquery='update request set satisfaction=? where request_id=?'
-    Connection.query(satquery,[satisfaction,taskid],(err,result)=>{
+    const comment=req.body.comment
+    const satquery='update request set satisfaction=? ,comment=? where request_id=?'
+    Connection.query(satquery,[satisfaction,comment,taskid],(err,result)=>{
         if(err){
             res.send({Message:'error'})
             console.log(err)
