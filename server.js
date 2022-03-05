@@ -11,13 +11,9 @@ const jwt=require('jsonwebtoken')
 const etdate = require('ethiopic-date');
 const ethiopic = require('ethiopic-js')
 const date=require('date-and-time')
+const format = require('date-format');
+const ethiopianDate = require("ethiopian-date")
 
-
-
-
-
-
- 
 //create app server
 var server = app.listen(8080,  "127.0.0.1", function () {
 
@@ -25,9 +21,16 @@ var server = app.listen(8080,  "127.0.0.1", function () {
     var port = server.address().port
   
     console.log("Example app listening at http://%s:%s", host, port)
+    const now=etdate.now()
+    const Date1=new Date()
+    ethiopianDate.toEthiopian(format.asString('dd/mm/yyyy hh:mm:ss', new Date()))
+   console.log( ethiopic.toGregorian(format.asString('dd/mm/yyyy', new Date())))
+    console.log(now)
+    console.log(format.asString()); // defaults to ISO8601 format and current date
+   console.log(format.asString(new Date())); // defaults to ISO8601 format
+    console.log(format.asString('dd/mm/yyyy hh:mm:ss', new Date()));
   
   });
-
 var Connection=mysql.createConnection({
     host:"localhost", 
     user:"root",
@@ -601,10 +604,11 @@ app.get('/ProgressTasksForRequester/:requesterusername',(req,res)=>{
 //New Request For Requester
 app.get('/NewRequestsForRequester/:requesterusername',(req,res)=>{
     const requesterusername=req.params.requesterusername
-    const progreassTask='select count(*) "NewRequest",r.request_id,r.status,u.user_fullname,u.Position,u.Gender,u.Phone ,r.Date,r.request_type,r.problem_desc ,r.satisfaction from  request r,users u where  r.workerusername=u.username  and r.requesterusername=? and r.status ="New"'
+    const progreassTask='select count(*) "NewRequest",r.request_id,r.status,u.user_fullname,u.Position,u.Gender,u.Phone ,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.request_type,r.problem_desc from  request r,users u where  r.workerusername=u.username  and r.requesterusername=? and r.status ="New"'
     Connection.query(progreassTask,[requesterusername],(err,result)=>{
         if(err){
-            res.send(err)
+            res.send({Message:"error"})
+            console.log(err)
         }else{
             res.send(result)
         }
