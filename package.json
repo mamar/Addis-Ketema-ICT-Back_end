@@ -17,6 +17,7 @@
     "ethiopian-calendar-date-converter": "^1.0.2",
     "ethiopian-date": "^0.0.6",
     "ethiopic-date": "^1.0.4",
+    "ethiopic-js": "^1.2.5",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
