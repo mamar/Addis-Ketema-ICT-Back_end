@@ -407,7 +407,7 @@ app.delete('/DeleteRequest/:request_id',(req,res)=>{
 //Get new Request
 app.get('/GetNewRequest',(req,res)=>{
     
-    const getrequest='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc from request r,users u  where r.status="New" and u.username=r.requesterusername'
+    const getrequest='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,r.status from request r,users u  where r.status="New" and u.username=r.requesterusername'
     Connection.query(getrequest,(err,result)=>{
         if(err) {
             res.send("error")
@@ -548,7 +548,7 @@ app.put('/finishTask/:request_id',(req,res)=>{
 //Progress 
  app.get('/GetProgressTask/:workerusername',(req,res)=>{
      const workerusername=req.params.workerusername
-     const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate from request r,users u  where r.status="work on progress " and u.username=r.requesterusername and workerusername=?'
+     const progreassTask='select r.status, r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate from request r,users u  where r.status="work on progress " and u.username=r.requesterusername and workerusername=?'
      Connection.query(progreassTask,[workerusername],(err,result)=>{
          if(err){
              res.send(err)
@@ -574,7 +574,7 @@ app.put('/finishTask/:request_id',(req,res)=>{
 //Finished Tasks With Satisfaction 
 app.get('/FinishedTasksWithSatisfaction/:requesterusername',(req,res)=>{
     const requesterusername=req.params.requesterusername
-    const progreassTask='select r.request_id,r.status,u.user_fullname,u.Position,u.Gender,u.Phone ,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") as finishedDate,r.satisfaction from  request r,users u where  r.workerusername=u.username  and r.requesterusername=? and r.status ="finished" and satisfaction is not null'
+    const progreassTask='select r.comment, r.request_id,r.status,u.user_fullname,u.Position,u.Gender,u.Phone ,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") as finishedDate,r.satisfaction from  request r,users u where  r.workerusername=u.username  and r.requesterusername=? and r.status ="finished" and satisfaction is not null'
     Connection.query(progreassTask,[requesterusername],(err,result)=>{
         if(err){
             res.send(err)
@@ -644,7 +644,7 @@ app.put('/SendSatsfaction/:requestid',(req,res)=>{
 
  app.get('/finishedTasksbyUser/:workerusername',(req,res)=>{
     const workerusername=req.params.workerusername
-    const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") as finishedDate ,r.satisfaction from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=?'
+    const progreassTask='select r.comment,r.status,r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") as finishedDate ,r.satisfaction from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=?'
     Connection.query(progreassTask,[workerusername,workerusername],(err,result)=>{
         if(err){
             res.send(err)
@@ -741,24 +741,44 @@ app.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
     const user=req.params.username
     const startDate=req.params.startDate
     const endDate=req.params.endDate
-    const userstand=' select s.service,s.measurement,s.time, (case'+
-       ' when DATEDIFF(r.finishedDate,r.assignedDate) < s.time '+
-        'then COUNT(*)'+
-        'END)"belowStandard",'+
-        '(case'+ 
-       ' when DATEDIFF(r.finishedDate,r.assignedDate) = s.time '+
-        'then COUNT(*)'+
-        'END)"WithinStandard",'+
-        '(case '+
-        'when DATEDIFF(r.finishedDate,r.assignedDate) > s.time '+ 
-        'then COUNT(*)'+
-       ' END)"AboveStandard","100%" AS "Standard",(SUM(r.satisfaction)/(COUNT(*))) "Actual",'+
-        '"ከፍተኛ" as standardAmh,(s.price * COUNT(*)) price '+
-         'from request r inner join requestwithstandard rs '+
-        ' on rs.requestid = r.request_id inner join standard s'+ 
-         ' on s.standardid=rs.standardid where r.workerusername=? and DATE_FORMAT(finishedDate,"%d-%m-%y") between  ? and ?  and r.satisfaction is not null and  r.status="finished"  GROUP by s.service '
-    Connection.query(userstand,[user,startDate,endDate],(err,result)=>{
+    const userstandq1='select s.service,s.measurement,s.time,'+
+       '(case when DATEDIFF(r.finishedDate,r.assignedDate) < s.time then COUNT(*) END) belowStandard,'+
+        '(case  when DATEDIFF(r.finishedDate,r.assignedDate) = s.time then COUNT(*) END) WithinStandard,'+
+        '(case when DATEDIFF(r.finishedDate,r.assignedDate) > s.time then COUNT(*) END) AboveStandard, '+
+         ' "100%" AS "Standard",(SUM(r.satisfaction)/(COUNT(*))) "Actual",'+
+         '( case when (SUM(r.satisfaction)/(COUNT(*))) >= 95  then "በጣም ከፍተኛ" '+
+       'when (SUM(r.satisfaction)/(COUNT(*)))between 75 and 95 then "ከፍተኛ" '+
+       'when (SUM(r.satisfaction)/(COUNT(*))) between 50 and 75  then "መካከለኛ" '+
+       'when (SUM(r.satisfaction)/(COUNT(*))) <= 50  then "በጣም ዝቅተኛ" end ) as standardAmh,'+
+       '(s.price * COUNT(*)) price  from request r inner join requestwithstandard rs '+
+        'on rs.requestid = r.request_id inner join standard s '+
+         'on s.standardid=rs.standardid where r.workerusername=? and '+
+          'DATE_FORMAT(finishedDate,"%d-%m-%y") between  ? and ? '+
+         'and r.satisfaction is not null and  r.status="finished"  GROUP by s.service'
+    Connection.query(userstandq1,[user,startDate,endDate],(err,result)=>{
         res.send(result)
+        console.log(err)
     
+    })
+})
+//Annoncement
+app.post('/AddAnnounce',(req,res)=>{
+    const name=req.body.name
+    const status="New"
+    const anounceq='insert into announcement (anounceName,status) values(?,?)'
+    Connection.query(anounceq,[name,status],(err,result)=>{
+        if(err){
+            res.send({Message:'error'})
+        }else{
+            res.send({Message:'success'})
+        }
+    })
+
+})
+//Display Announcement
+app.get('/DisplayAnnounce',(req,res)=>{
+    const announce='select * from announcement'
+    Connection.query(announce,(err,result)=>{
+        res.send(result)
     })
 })
