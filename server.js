@@ -22,12 +22,7 @@ var server = app.listen(8080,  "127.0.0.1", function () {
   
     console.log("Example app listening at http://%s:%s", host, port)
     const now=etdate.now()
-    const Date1=new Date()
-    ethiopianDate.toEthiopian(format.asString('dd/mm/yyyy hh:mm:ss', new Date()))
-   console.log( ethiopic.toGregorian(format.asString('dd/mm/yyyy', new Date())))
     console.log(now)
-    console.log(format.asString()); // defaults to ISO8601 format and current date
-   console.log(format.asString(new Date())); // defaults to ISO8601 format
     console.log(format.asString('dd/mm/yyyy hh:mm:ss', new Date()));
   
   });
@@ -171,8 +166,6 @@ app.post('/Register',(req,res)=>{
     const age=req.body.age
     const gender=req.body.Gender
     const position=req.body.Position
-    const now=new Date()
-    const date3 = date.format(now,'DD/MM/YYYY HH:mm:ss');
     const phone=req.body.Phone
     const office_id=req.body.office_id
     const usercheck='select username from users where username=?'
@@ -271,9 +264,9 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
       const phone=req.body.phone
      const ethioDate= ethiopianDate.toEthiopian(YYYY,MM,DD)
       const Date2=new Date().getTime()
-      const insertoffice='insert into office(office_name,floor_no,phone,Date) values (?,?,?,?)'
+      const insertoffice='insert into office(office_name,floor_no,phone) values (?,?,?,?)'
       
-      Connection.query(insertoffice,[office_name,floor_no,phone,ethioDate],(err,result)=>{
+      Connection.query(insertoffice,[office_name,floor_no,phone],(err,result)=>{
           res.send(result);
           console.log(ethioDate)
          
@@ -352,9 +345,9 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
      
 
     const addRequest=
-    'Insert into request (requesterusername,division,floor_no,office_no,phone,request_type,problem_desc,status,Date) values(?,?,?,?,?,?,?,?,DATE_FORMAT(?,"%d/%m/%Y %h:%m:%s"))'
+    'Insert into request (requesterusername,division,floor_no,office_no,phone,request_type,problem_desc,status) values(?,?,?,?,?,?,?,?)'
     Connection.query(addRequest,[requesterusername,division,floor_no,
-        office_no,phone,request_type,problem_desc,status,now],(err,result)=>{
+        office_no,phone,request_type,problem_desc,status],(err,result)=>{
             if (err){
                res.send({Message:"Error"})
             
@@ -368,7 +361,10 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
   })
 // Get All Request 
 app.get('/GetAllRequest',(req,res)=>{
-    const getrequest='select * from request'
+    const getrequest='select requesterusername,workerusername,division,floor_no,floor_no,'+
+         ' phone,request_type,problem_desc,status,DATE_FORMAT(assignedDate,"%d/%m/%y %h:%m:%s") assignedDate,'+
+         'DATE_FORMAT(finishedDate,"%d/%m/%y %h:%m:%s") finishedDate,DATE_FORMAT (Date,"%d/%m/%y %h:%m:%s")Date'+
+         ' from request'
     Connection.query(getrequest,(err,result)=>{
         if(err){
             res.send('error')
@@ -604,11 +600,13 @@ app.get('/ProgressTasksForRequester/:requesterusername',(req,res)=>{
 //New Request For Requester
 app.get('/NewRequestsForRequester/:requesterusername',(req,res)=>{
     const requesterusername=req.params.requesterusername
-    const progreassTask='select count(*) "NewRequest",r.request_id,r.status,u.user_fullname,u.Position,u.Gender,u.Phone ,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.request_type,r.problem_desc from  request r,users u where  r.workerusername=u.username  and r.requesterusername=? and r.status ="New"'
+    const progreassTask='select r.request_id,r.status ,'+
+    'DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,r.request_type,r.problem_desc '+
+    'from  request r,users u where  r.requesterusername=u.username  and r.requesterusername=?'+ 
+    'and r.status ="New"'
     Connection.query(progreassTask,[requesterusername],(err,result)=>{
         if(err){
             res.send({Message:"error"})
-            console.log(err)
         }else{
             res.send(result)
         }
@@ -646,7 +644,7 @@ app.put('/SendSatsfaction/:requestid',(req,res)=>{
 
  app.get('/finishedTasksbyUser/:workerusername',(req,res)=>{
     const workerusername=req.params.workerusername
-    const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") as finishedDate from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=?'
+    const progreassTask='select r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate,DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") as finishedDate ,r.satisfaction from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=?'
     Connection.query(progreassTask,[workerusername,workerusername],(err,result)=>{
         if(err){
             res.send(err)
@@ -657,9 +655,25 @@ app.put('/SendSatsfaction/:requestid',(req,res)=>{
       
     })
 })
-app.get('/performance',(req,res)=>{
-    const performance ='select u.user_fullname,(select count(*) as count from request r  where r.workerusername=u.username and r.status="finished")"Finished",  (select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress") "Assigned",(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Computer" ) "ComputerProgress",    (select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Computer" ) "ComputerFinished",(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Printer" ) "PrinterProgress",(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Printer" ) "PrinterFinished" , (select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Photocopy" ) "PhotoCopyFinished",(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Photocopy" ) "PhotoCopyProgress",  (select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Network" ) "NetworkProgress",(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Network" ) "NetworkFinished",  (select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Software" ) "SoftwareFinished",(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Software" ) "SoftwareProgress",(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Others" ) "OtherProgress",(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Others" ) "OtherFinished"  from users u group  by u.username '
-    Connection.query(performance,(err,result)=>{
+app.get('/performance/:startDate/:endDate',(req,res)=>{
+    const startDate=req.params.startDate
+    const endDate=req.params.endDate
+    const performance =  'select u.user_fullname,'+
+                         '(select count(*) as count from request r  where r.workerusername=u.username and r.status="finished")"Finished",'+ 
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress") "Assigned",'+
+                          '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Computer" ) "ComputerProgress",'+ 
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Computer" ) "ComputerFinished",'+
+                        '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Printer" ) "PrinterProgress",'+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Printer" ) "PrinterFinished" ,'+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Photocopy" ) "PhotoCopyFinished",'+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Photocopy" ) "PhotoCopyProgress", '+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Network" ) "NetworkProgress",'+
+                        '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Network" ) "NetworkFinished",'+  
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Software" ) "SoftwareFinished",'+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Software" ) "SoftwareProgress",'+
+                         '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Others" ) "OtherProgress",(select count(*)'+
+                        ' from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Others" ) "OtherFinished"  from users u ,request r WHERE u.username=r.workerusername and DATE_FORMAT(r.assignedDate,"%d-%m-%y") between ? and  ? group  by u.username '
+    Connection.query(performance,[startDate,endDate],(err,result)=>{
         res.send(result)
     })
 })
@@ -681,14 +695,70 @@ app.post('/AddStandard',(req,res)=>{
       
     })
 })
-//user Standard 
-app.get('UserStandard',(req,res)=>{
-    const user=req.body.username
-    const startDate=req.body.startDate
-    const endDate=req.body.endDate
-    const userstand='select request_id,workerusername,finishedDate from request where finishedDate between ? and ? and workerusername=? '
-    Connection.query(userstand,[startDate,endDate,user],(err,result)=>{
+//It Standard form
+app.post('/ItStandardForm/:requestid',(req,res)=>{
+    const standardid=req.body.standardid
+    const requestid=req.params.requestid
+    const itsatndardq="insert into requestwithstandard(requestid,standardid) values(?,?)"
+    Connection.query(itsatndardq,[requestid,standardid],(err,result)=>{
+        if(err){
+            res.send({Message:"error"})
+            console.log(err)
+        }if(result){
+            res.send({Message:"success"})
+        }
+    })
+})
+//select All Standard
+app.get('/GetAllStandard',(req,res)=>{
+    const standardq="select * from Standard"
+    Connection.query(standardq,(err,result)=>{
         res.send(result)
-        console.log(err)
+    })
+})
+//Update standard
+app.put('/UpdateStandard/:standardid',(req,res)=>{
+    const standardid=req.params.standardid
+    const service=req.body.service
+    const measurement=req.body.measurement
+    const time=req.body.time
+    const price=req.body.price
+    const standardq="update standard set service=? ,measurement=? ,time=?,price=? where standardid=?"
+    Connection.query(standardq,[service,measurement,time,price],(err,result)=>{
+        res.send(result)
+    })
+})
+//Getfor Standard for Update
+app.get('/GetStandardForUpdate/:Standardid',(req,res)=>{
+    const standardid=req.params.Standardid
+    const standardq="select * from Standard where standardid=?"
+    Connection.query(standardq,[standardid],(err,result)=>{
+        res.send(result)
+    })
+})
+//user Standard 
+app.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
+    const user=req.params.username
+    const startDate=req.params.startDate
+    const endDate=req.params.endDate
+    const userstand=' select s.service,s.measurement,s.time, (case'+
+       ' when DATEDIFF(r.finishedDate,r.assignedDate) < s.time '+
+        'then COUNT(*)'+
+        'END)"belowStandard",'+
+        '(case'+ 
+       ' when DATEDIFF(r.finishedDate,r.assignedDate) = s.time '+
+        'then COUNT(*)'+
+        'END)"WithinStandard",'+
+        '(case '+
+        'when DATEDIFF(r.finishedDate,r.assignedDate) > s.time '+ 
+        'then COUNT(*)'+
+       ' END)"AboveStandard","100%" AS "Standard",(SUM(r.satisfaction)/(COUNT(*))) "Actual",'+
+        '"ከፍተኛ" as standardAmh,(s.price * COUNT(*)) price '+
+         'from request r inner join requestwithstandard rs '+
+        ' on rs.requestid = r.request_id inner join standard s'+ 
+         ' on s.standardid=rs.standardid where r.workerusername=? and DATE_FORMAT(finishedDate,"%d-%m-%y") between  ? and ?  and r.satisfaction is not null and  r.status="finished"  GROUP by s.service '
+    Connection.query(userstand,[user,startDate,endDate],(err,result)=>{
+        res.send(result)
+    
     })
 })
