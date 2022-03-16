@@ -132,8 +132,10 @@ app.put('/blockuser/:userid',(req,res)=>{
     Connection.query(blockuser,userid,(err,result)=>{
         if(result){
             res.send({Message:'blocked'})
+            console.log(result)
         }else{
             res.send({Message:"allready blocked"})
+            console.log(err)
         }
     })
 
@@ -144,8 +146,11 @@ app.put('/unblockuser/:userid',(req,res)=>{
     Connection.query(unblockuser,userid,(err,result)=>{
         if(result){
             res.send({Message:'ublocked'})
+            console.log(result)
+            
         }else{
             res.send({Message:"repition"})
+            console.log(err)
         }
     })
 
@@ -178,14 +183,15 @@ app.post('/Register',(req,res)=>{
             bcrypt.hash(password,saltRound,(err,hash)=>{
                 if(err){
                     res.send({err:"Server Error"})
+                    console.log(err)
                 }
                 Connection.query(Adduser,[office_id,username,ROLES,hash,user_fullname,age,gender,position,phone],(err,result)=>{
                     if(result){
                         res.send(result)
-                        console.log(date3)
         
                     }else{
                         res.send({err:"Server Error"})
+                        console.log(err)
                     }
                     
                     
@@ -268,7 +274,7 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
       
       Connection.query(insertoffice,[office_name,floor_no,phone],(err,result)=>{
           res.send(result);
-          console.log(ethioDate)
+         
          
       })
   })
@@ -336,9 +342,7 @@ app.delete('/Deleteusers/:userid',(req,res)=>{
       const status="New"
       const now=etdate.now()
       const Date1=new Date().getTime()
-      console.log(ethiopic.toEthiopic(Date1))
-     console.log( ethiopic.toGregorian(now))
-      console.log(now)
+     
      //const Date1 = date.format(now,'DD/MM/YYYY ');
       //const Date1=new Date().getTime()
       const requesterusername=req.params.requesterusername
@@ -507,7 +511,7 @@ app.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
             
         } if(result){
             res.send({Message:"Success"})
-            console.log(Date1)
+          
          
         }
         
@@ -517,15 +521,13 @@ app.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
 app.put('/finishTask/:request_id',(req,res)=>{
     const taskid=req.params.request_id
     const standardid=req.body.standardid
-    const now=new Date()
-    const Date1 = date.format(now,'DD/MM/YYYY HH:mm:ss');
-    console.log(Date1)
+    const now=new Date()    
     //const Date1=new Date().getTime()
-    const standard='insert into requestwithstandard(requestid,standardid) values(?,?)'
     const assigntaks='update request set status="finished",finishedDate=? where request_id=?'
     Connection.query(assigntaks,[now,taskid],(err,result)=>{
         if(err){
             res.send({Message:'Error'})
+            console.log(err)
         
         } if(result){
                 res.send({Message:"Success"})
@@ -622,11 +624,11 @@ app.put('/SendSatsfaction/:requestid',(req,res)=>{
     Connection.query(satquery,[satisfaction,comment,taskid],(err,result)=>{
         if(err){
             res.send({Message:'error'})
-            console.log(err)
+            
         
         } if(result){
             res.send({Message:"success"})
-            console.log(result)
+            
             
         }
         
@@ -688,7 +690,7 @@ app.post('/AddStandard',(req,res)=>{
     Connection.query(standard,[service,measurement,time,price],(err,result)=>{
         if(err){
             res.send({Message:'error'})
-            console.log(err)
+           
         }if(result){
             res.send({Message:'success'})
         }
@@ -703,7 +705,7 @@ app.post('/ItStandardForm/:requestid',(req,res)=>{
     Connection.query(itsatndardq,[requestid,standardid],(err,result)=>{
         if(err){
             res.send({Message:"error"})
-            console.log(err)
+           
         }if(result){
             res.send({Message:"success"})
         }
@@ -757,7 +759,7 @@ app.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
          'and r.satisfaction is not null and  r.status="finished"  GROUP by s.service'
     Connection.query(userstandq1,[user,startDate,endDate],(err,result)=>{
         res.send(result)
-        console.log(err)
+        
     
     })
 })
@@ -769,7 +771,7 @@ app.post('/AddAnnounce',(req,res)=>{
     Connection.query(anounceq,[anounceName,status],(err,result)=>{
         if(err){
             res.send({Message:'error'})
-            console.log(err)
+           
         }else{
             res.send({Message:'success'})
         }
@@ -795,7 +797,7 @@ app.delete('/DeleteAnnounce/:anouncid',(req,res)=>{
     Connection.query(announceD,[anouncid],(err,result)=>{
         if(err){
             res.send({Message:'|Derror'})
-            console.log(err)
+           
         }if(result){
             res.send({Message:"Dsuccess"})
         }
