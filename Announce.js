@@ -25,9 +25,10 @@ router.get('/DisplayAnnounce',(req,res)=>{
     })
 })
 router.get('/DisplayAnnounceForEmployee',(req,res)=>{
-    const announce='select anouncid,anounceName,DATE_FORMAT(anounceDate,"%d-%m-%y") anounceDate ,status from announcement where status="Finish"'
+    const announce='select anouncid,anounceName,DATE_FORMAT(anounceDate,"%d-%m-%y") anounceDate ,status from announcement where status="New"'
     Connection.query(announce,(err,result)=>{
         res.send(result)
+        console.log(err)
     })
 })
 router.delete('/DeleteAnnounce/:anouncid',(req,res)=>{

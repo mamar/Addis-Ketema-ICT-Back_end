@@ -6,10 +6,11 @@ router.post('/AddOffice',(req,res)=>{
     const office_name=req.body.office_name
     const floor_no=req.body.floor_no
     const phone=req.body.phone
-    const insertoffice='insert into office(office_name,floor_no,phone) values (?,?,?,?)'
+    const insertoffice='insert into office(office_name,floor_no,phone) values (?,?,?)'
     
     Connection.query(insertoffice,[office_name,floor_no,phone],(err,result)=>{
         res.send(result);
+        console.log(err)
        
        
     })
@@ -47,9 +48,11 @@ router.put('/updateOffice/:office_id',(req,res)=>{
     const phone=req.body.phone
     const updateOffice='update office set office_name=? , floor_no=? , phone =? where office_id=?'
     Connection.query(updateOffice,[office_name,floor_no,phone,office_id],(err,result)=>{
-      
-        res.send(result)
-       
+        if(err){
+            res.send({Message:'error'})
+        }if(result){
+            res.send({Message:'success'})
+        }       
     })
 })
 //Delete Office
@@ -66,4 +69,5 @@ router.delete('/DeleteOffice/:office_id',(req,res)=>{
         
     })
 })
+
 module.exports=router

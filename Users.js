@@ -130,14 +130,14 @@ router.post('/Register',(req,res)=>{
         }else{
             bcrypt.hash(password,saltRound,(err,hash)=>{
                 if(err){
-                    res.send({err:"Server Error"})
+                    res.send({Message:"error"})
                 }
                 Connection.query(Adduser,[office_id,username,ROLES,hash,user_fullname,age,gender,position,phone,status],(err,result)=>{
                     if(result){
-                        res.send(result)
+                        res.send({Message:"sucess"})
         
                     }else{
-                        res.send({err:"Server Error"})
+                        res.send({Message:"error"})
                     }
                     
                     
@@ -162,14 +162,13 @@ router.get('/Getusers',(req,res)=>{
         
     })
 })
-//Get users by id
-router.get('/Getuserbyusername',(req,res)=>{
-    const userid=req.body.params
-    const user=  req.session.user[0].username
+//Get users by username
+router.get('/Getuserbyusername/:username',(req,res)=>{
+    const username=req.params.username
     const getuserbyid='select * from users where username=?'
-    Connection.query(getuserbyid,[user],(err,result)=>{
+    Connection.query(getuserbyid,[username],(err,result)=>{
         if(err){
-            res.send('error')
+            res.send({Message:'error'})
         } else{
             res.send(result)
         }
@@ -177,6 +176,44 @@ router.get('/Getuserbyusername',(req,res)=>{
     })
 
 })
+// Get users by userid
+router.get('/Getuserbyid/:userid',(req,res)=>{
+    const userid=req.params.userid
+    const getuserbyid='select * from users where userid=?'
+    Connection.query(getuserbyid,[userid],(err,result)=>{
+        if(err){
+            res.send({Message:'error'})
+        } else{
+            res.send(result)
+        }
+      
+    })
+
+})
+
+//update users by userid
+router.patch('/Updateusersbyid/:userid',(req,res)=>{
+    const userid=req.params.userid
+    const phone=req.body.Phone
+  const office_id=req.body.office_id
+    const position=req.body.Position
+    const userfullname=req.body.user_fullname
+    const gender=req.body.Gender
+    const ROLES=req.body.ROLES
+    const updateuser='update users set office_id=?,ROLES=? ,user_fullname=? ,Gender=?, Phone=? ,Position=? where userid=?'
+    
+        Connection.query(updateuser,[office_id,ROLES,userfullname,gender,phone,position,userid],(err,result)=>{
+            if(result){
+                res.send({Message:'Error'})
+
+            }else{
+                res.send({Message:"Success"})
+            }
+            
+            
+        })
+
+    })
 //update users
 router.patch('/Updateusers/:username',(req,res)=>{
     const username=req.params.username
@@ -184,8 +221,8 @@ router.patch('/Updateusers/:username',(req,res)=>{
   const offic_id=req.body.office_id
     const position=req.body.Position
     const userfullname=req.body.user_fullname
-    const updateuser='update users set office_id=?, user_fullname=? , Phone=? ,Position=? where username=?'
-    Connection.query(updateuser,[offic_id,userfullname,phone,position,username],(err,result)=>{
+    const updateuser='update users set  user_fullname=? , Phone=? ,Position=? where username=?'
+    Connection.query(updateuser,[userfullname,phone,position,username],(err,result)=>{
         if(err){
             res.send({Message:'Error'})
     
