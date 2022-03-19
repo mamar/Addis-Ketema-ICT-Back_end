@@ -74,9 +74,9 @@ router.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
     const startDate=req.params.startDate
     const endDate=req.params.endDate
     const userstandq1='select s.service,s.measurement,s.time,'+
-       '(case when DATEDIFF(r.finishedDate,r.assignedDate)+1 < s.time then COUNT(*) END) belowStandard,'+
-        '(case  when DATEDIFF(r.finishedDate,r.assignedDate)+1 = s.time then COUNT(*) END) WithinStandard,'+
-        '(case when DATEDIFF(r.finishedDate,r.assignedDate) >+1 s.time then COUNT(*) END) AboveStandard, '+
+       '(case when DATEDIFF(r.finishedDate,r.assignedDate) < s.time then COUNT(*) END) belowStandard,'+
+        '(case  when DATEDIFF(r.finishedDate,r.assignedDate) = s.time then COUNT(*) END) WithinStandard,'+
+        '(case when DATEDIFF(r.finishedDate,r.assignedDate) > s.time then COUNT(*) END) AboveStandard, '+
          ' "100%" AS "Standard",(SUM(r.satisfaction)/(COUNT(*))) "Actual",'+
          '( case when (SUM(r.satisfaction)/(COUNT(*))) >= 95  then "በጣም ከፍተኛ" '+
        'when (SUM(r.satisfaction)/(COUNT(*)))between 75 and 95 then "ከፍተኛ" '+
@@ -89,6 +89,7 @@ router.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
          'and r.satisfaction is not null and  r.status="finished"  GROUP by s.service'
     Connection.query(userstandq1,[user,startDate,endDate],(err,result)=>{
         res.send(result)
+        console.log(err)
         
     
     })
