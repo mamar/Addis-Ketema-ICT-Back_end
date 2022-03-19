@@ -218,7 +218,7 @@ router.put('/finishTask/:request_id',(req,res)=>{
 //Progress 
 router.get('/GetProgressTask/:workerusername',(req,res)=>{
    const workerusername=req.params.workerusername
-   const progreassTask='select r.status, r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate from request r,users u  where r.status="work on progress " and u.username=r.requesterusername and workerusername=?'
+   const progreassTask='select (select count(*) FROM  requestwithstandard rs where   r.request_id =rs.requestid)  checkstandard, r.status, r.request_id,(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,r.division,r.floor_no,r.office_no,r.phone,r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate from request r,users u  where r.status="work on progress " and u.username=r.requesterusername and workerusername=?'
    Connection.query(progreassTask,[workerusername],(err,result)=>{
        if(err){
            res.send(err)

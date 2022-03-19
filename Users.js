@@ -122,11 +122,13 @@ router.post('/Register',(req,res)=>{
     const office_id=req.body.office_id
     const status="unblock"
     const usercheck='select username from users where username=?'
-    const Adduser='insert into users(office_id,username,ROLES,password,user_fullname,age,Gender,Position,Phone) values(?,?,?,?,?,?,?,?,?)'
+    const Adduser='insert into users(office_id,username,ROLES,password,user_fullname,'+
+        'age,Gender,Position,Phone,status) values(?,?,?,?,?,?,?,?,?,?)'
 
     Connection.query(usercheck,[username],(err,result)=>{
-        if(result.length >= 1){
+        if(result){
             res.send({Message:"Username allready exist"})
+            console.log(err)
         }else{
             bcrypt.hash(password,saltRound,(err,hash)=>{
                 if(err){
