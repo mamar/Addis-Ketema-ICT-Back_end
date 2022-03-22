@@ -262,4 +262,17 @@ router.delete('/Deleteusers/:userid',(req,res)=>{
        
     })
 })
+// Display Users Roles IT
+router.get('/GetuserIT/',(req,res)=>{
+    const getuserbyid='select * from users where ROLES="IT"'
+    Connection.query(getuserbyid,(err,result)=>{
+        if(err){
+            res.send({Message:'error'})
+        } else{
+            res.send(result)
+        }
+      
+    })
+
+})
   module.exports=router
