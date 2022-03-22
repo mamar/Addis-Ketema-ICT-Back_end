@@ -31,7 +31,7 @@ router.post('/AddRequest/:requesterusername',(req,res)=>{
 })
 // Get All Request 
 router.get('/GetAllRequest',(req,res)=>{
-  const getrequest='select r.requesterusername,r.workerusername,u.division,u.floor_no,u.office_no,'+
+  const getrequest='select r.request_id, r.requesterusername,r.workerusername,u.division,u.floor_no,u.office_no,r.Assignedby,'+
        ' u.phone,r.request_type,r.problem_desc,r.status,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") assignedDate,'+
        'DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") finishedDate,DATE_FORMAT (r.Date,"%d/%m/%y %h:%m:%s")Date'+
        ' from request r,users u where r.requesterusername=u.username order by DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") desc'
@@ -65,9 +65,9 @@ router.delete('/DeleteRequest/:request_id',(req,res)=>{
   const Deletreq='Delete from request where request_id=?'
   Connection.query(Deletreq,[request_id],(err,result)=>{
       if(err){
-          res.send('error')
-      } else{
-          res.send("Request Delete Successfully")
+          res.send({Message:'error'})
+      } if(result){
+          res.send({Message:'success'})
       }
      
   })
@@ -167,14 +167,14 @@ router.get('/CountOthers',(req,res)=>{
 })
 
 
-//Assign Task
+//self Assign Assign Task
 router.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
   const taskid=req.params.request_id
   const workerusername=req.params.workerusername
   const now=new Date()
   const Date1 = date.format(now,'YYYY-MM-DD HH:mm:ss');
   //const Date1=new Date().getTime()
-  const assigntaks='update request set status="Work On Progress",assignedDate=?,workerusername=? where request_id=?'
+  const assigntaks='update request set Assignedby="Self" ,status="Work On Progress",assignedDate=?,workerusername=? where request_id=?'
   Connection.query(assigntaks,[Date1,workerusername,taskid],(err,result)=>{
       if(err){
           res.send({Message:'Error'})
@@ -187,6 +187,29 @@ router.put('/AssignTask/:request_id/:workerusername',(req,res)=>{
       
   })
 })
+// Assign  Task For user
+router.put('/AssignUser/:request_id/:Assignedby',(req,res)=>{
+    const taskid=req.params.request_id
+    const workerusername=req.body.workerusername
+    const Assignedby=req.params.Assignedby
+    const now=new Date()
+    const Date1 = date.format(now,'YYYY-MM-DD HH:mm:ss');
+    //const Date1=new Date().getTime()
+    const assigntaks='update request set status="Work On Progress",assignedDate=?,workerusername=?,Assignedby=? where request_id=?'
+    Connection.query(assigntaks,[Date1,workerusername,Assignedby,taskid],(err,result)=>{
+        if(err){
+            res.send({Message:'Error'})
+            console.log(err)
+            
+        } if(result){
+            res.send({Message:"Success"})
+            console.log(result)
+          
+         
+        }
+        
+    })
+  })
 //finish Task
 router.put('/finishTask/:request_id',(req,res)=>{
   const taskid=req.params.request_id
@@ -219,7 +242,7 @@ router.put('/finishTask/:request_id',(req,res)=>{
 router.get('/GetProgressTask/:workerusername',(req,res)=>{
    const workerusername=req.params.workerusername
    const progreassTask='select (select count(*) FROM  requestwithstandard rs where   r.request_id =rs.requestid)  checkstandard,'+
-   ' r.status, r.request_id,'+
+   ' r.status, r.request_id,r.Assignedby,'+
     '(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,'+
     'u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,'+
     'u.division,u.floor_no,u.office_no,u.phone,r.request_type,r.problem_desc ,'+
@@ -333,7 +356,7 @@ router.get('/finishedTasksbyUser/:workerusername',(req,res)=>{
   const progreassTask='select r.comment,r.status,r.request_id,'+
   '(select o.office_name from office o where o.office_id=(select office_id from users u1 where u1.username=r.requesterusername) )as  office_name,'+
   'u.user_fullname,DATE_FORMAT(r.Date,"%d/%m/%Y %h:%m:%s") as Date,'+
- ' u.division,u.floor_no,u.office_no,u.phone,r.request_type,r.problem_desc,'+
+ ' u.division,u.floor_no,u.office_no,u.phone,r.request_type,r.problem_desc,r.Assignedby,'+
   'DATE_FORMAT(r.assignedDate,"%d/%m/%Y %h:%m:%s") as assignedDate,'+
   'DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") as finishedDate ,r.satisfaction '+
   'from request r,users u  where r.status="finished" and u.username=r.requesterusername and workerusername=? order by DATE_FORMAT(r.finishedDate,"%d/%m/%Y %h:%m:%s") desc'
