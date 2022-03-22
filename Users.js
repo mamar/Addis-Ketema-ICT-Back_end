@@ -110,7 +110,7 @@ router.get('/logout',(req,res) => {
     res.redirect('/login');
 });
 //post Users
-router.post('/Register',(req,res)=>{
+router.post('/Register',(req,res,next)=>{
     const username=req.body.username
     const password=req.body.password
     const ROLES=req.body.ROLES
@@ -131,7 +131,10 @@ router.post('/Register',(req,res)=>{
     Connection.query(usercheck,[username],(err,result)=>{
         if(result.length >=1){
             res.send({Message:"Username allready exist"})
-        }else{
+        }if(err){
+            res.send({Message:"error"})
+        }
+        else{
             bcrypt.hash(password,saltRound,(err,hash)=>{
                 if(err){
                     res.send({Message:"error"})
@@ -142,7 +145,7 @@ router.post('/Register',(req,res)=>{
                         res.send({Message:"sucess"})
                      
         
-                    }else{
+                    }if(err){
                         res.send({Message:"error"})
                     }
                     
@@ -158,7 +161,7 @@ router.post('/Register',(req,res)=>{
 })
 //Get All users
 router.get('/Getusers',(req,res)=>{
-    const getuser='select u.userid,u.status,u.division,u.floor_no,u.office_no, o.office_name ,u.username,u.ROLES,u.user_fullname,u.Age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id'
+    const getuser='select u.userid,u.status,u.division,u.floor_no,u.office_no, o.office_name ,u.username,u.ROLES,u.user_fullname,u.Age,u.Gender,u.Position,u.Phone,u.Date from users u,office o  where u.office_id=o.office_id order by Date desc'
     Connection.query(getuser,(err,result)=>{
         if(err){
             res.send("error")
