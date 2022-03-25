@@ -192,7 +192,6 @@ router.get('/Getuserbyid/:userid',(req,res)=>{
     Connection.query(getuserbyid,[userid],(err,result)=>{
         if(err){
             res.send({Message:'error'})
-            console.log(err)
         } else{
             res.send(result)
         }

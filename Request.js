@@ -84,7 +84,6 @@ router.get('/GetNewRequest',(req,res)=>{
   Connection.query(getrequest,(err,result)=>{
       if(err) {
           res.send("error")
-          console.log(err)
       }if(result){
           res.send(result)
       }                    
@@ -199,11 +198,9 @@ router.put('/AssignUser/:request_id/:Assignedby',(req,res)=>{
     Connection.query(assigntaks,[Date1,workerusername,Assignedby,taskid],(err,result)=>{
         if(err){
             res.send({Message:'Error'})
-            console.log(err)
             
         } if(result){
             res.send({Message:"Success"})
-            console.log(result)
           
          
         }
