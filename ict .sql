@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2022 at 12:33 AM
+-- Generation Time: Mar 24, 2022 at 02:14 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.3.29
 
@@ -119,8 +119,6 @@ INSERT INTO `request` (`request_id`, `workerusername`, `requesterusername`, `Ass
 (58, 'mamar', NULL, NULL, 'Printer', 'fgbfdgfdhfghfghgfh', 'Work On Progress', NULL, '2022-03-15 23:56:07', '2022-03-15 16:58:06', NULL, NULL),
 (59, 'mamar', NULL, NULL, 'Photocopy', 'dfsdfdsfsf', 'Work On Progress', NULL, '2022-03-16 17:14:49', '2022-03-16 10:15:21', NULL, NULL),
 (60, NULL, NULL, NULL, 'Photocopy', 'dfsdfsf', 'New', NULL, '2022-03-16 17:15:07', NULL, NULL, NULL),
-(62, 'mamar', 'estifanos', NULL, 'Photocopy', 'jhjghjgj', 'finished', '78', '2022-03-17 22:36:12', '2022-03-17 15:36:24', '2022-03-17 15:37:08', 'good'),
-(67, 'mamar', 'estifanos', NULL, 'Printer', 'sdfjkbdkjgbndkjhnkfg', 'Work On Progress', NULL, '2022-03-19 19:04:15', '2022-03-21 16:47:32', NULL, NULL),
 (68, 'mamar', 'estifanos', NULL, 'Photocopy', 'ፕሪንተሬ አይሰራም', 'Work On Progress', NULL, '2022-03-19 19:04:35', '2022-03-19 12:05:09', NULL, NULL);
 
 -- --------------------------------------------------------

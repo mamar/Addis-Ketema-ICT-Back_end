@@ -89,9 +89,20 @@ router.get('/UserStandard/:username/:startDate/:endDate',(req,res)=>{
          'and r.satisfaction is not null and  r.status="finished"  GROUP by s.service'
     Connection.query(userstandq1,[user,startDate,endDate],(err,result)=>{
         res.send(result)
-        console.log(err)
         
     
+    })
+})
+router.delete('/DeleteStandard/:standardid',(req,res)=>{
+    const standardid=req.params.standardid
+    const deletStand='Delete from Standard where standardid=?'
+    Connection.query(deletStand,[standardid],(err,result)=>{
+        if(result){
+            res.send({Message:'success'})
+        }if(err){
+            res.send({Message:'error'})
+            console.log(err)
+        }
     })
 })
 module.exports=router
