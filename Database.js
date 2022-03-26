@@ -2,7 +2,7 @@ var express = require('express');
 const router=express.Router()
 const mysql=require('mysql');
 var Connection=mysql.createConnection({
-    host:"209.209.40.88", 
+    host:"mysql-73517-0.cloudclusters.net", 
     user:"root",
     password:"0949050454",
     database:"ict",

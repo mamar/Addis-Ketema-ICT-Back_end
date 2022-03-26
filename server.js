@@ -12,7 +12,7 @@ const Request=require('./Request')
 const Announce=require('./Announce')
 
 //create app server
-var server = app.listen(  19073  ,  "209.209.40.88", function () {
+var server = app.listen( process.env.port || 19073  ,  "mysql-73517-0.cloudclusters.net", function () {
 
     var host = server.address().address
     var port = server.address().port
