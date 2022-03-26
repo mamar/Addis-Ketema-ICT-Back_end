@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 app.use(cors({
-    origin:["http://www.erp.com:300","http://erp.com:500","http://localhost:3000"],
+    origin:["http://www.erp.com:300","http://erp.com:500","http://localhost:3000","https://addis-erp.herokuapp.com/login"],
     methods:["Get","Post","DELETE","PUT","put","PATCH","patch"],
     credentials:true
 }));
