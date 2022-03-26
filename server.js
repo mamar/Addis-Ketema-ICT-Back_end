@@ -12,7 +12,7 @@ const Request=require('./Request')
 const Announce=require('./Announce')
 
 //create app server
-var server = app.listen(  8080  ,  "127.0.0.1", function () {
+var server = app.listen(  19073  ,  "209.209.40.88", function () {
 
     var host = server.address().address
     var port = server.address().port
