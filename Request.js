@@ -20,6 +20,7 @@ router.post('/AddRequest/:requesterusername',(req,res)=>{
   Connection.query(addRequest,[requesterusername,request_type,problem_desc,status],(err,result)=>{
           if (err){
              res.send({Message:"Error"})
+             console.log(err)
           
           }
           if(result){
@@ -123,7 +124,7 @@ router.get('/CountOnProgress',(req,res)=>{
 })
 //Count Taks done on Computer
 router.get('/CountComputer',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Computer"'
+  const counttask='select count(*)  total from request where request_type like "%Computer%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
@@ -131,35 +132,35 @@ router.get('/CountComputer',(req,res)=>{
 ////Count Taks done on Printer
 
 router.get('/CountPrinter',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Printer"'
+  const counttask='select count(*)  total from request where request_type like "%Printer%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
 })
 // Count Software
 router.get('/CountSoftware',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Software"'
+  const counttask='select count(*)  total from request where request_type like "%Software%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
 })
 //Count Network
 router.get('/CountNetwork',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Network"'
+  const counttask='select count(*)  total from request where request_type like "%Network%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
 })
 //Count PhotoCopy
 router.get('/CountPhotocopy',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Photocopy"'
+  const counttask='select count(*)  total from request where request_type like "%Photocopy%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
 })
 //Count PhotoCopy
 router.get('/CountOthers',(req,res)=>{
-  const counttask='select count(*)  total from request where request_type="Others"'
+  const counttask='select count(*)  total from request where request_type="%Others%"'
   Connection.query(counttask,(err,result)=>{
       res.send(result)
   })
@@ -373,18 +374,18 @@ router.get('/performance/:startDate/:endDate',(req,res)=>{
   const performance =  'select u.user_fullname,'+
                        '(select count(*) as count from request r  where r.workerusername=u.username and r.status="finished")"Finished",'+ 
                        '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress") "Assigned",'+
-                        '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Computer" ) "ComputerProgress",'+ 
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Computer" ) "ComputerFinished",'+
-                      '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Printer" ) "PrinterProgress",'+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Printer" ) "PrinterFinished" ,'+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Photocopy" ) "PhotoCopyFinished",'+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Photocopy" ) "PhotoCopyProgress", '+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Network" ) "NetworkProgress",'+
-                      '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Network" ) "NetworkFinished",'+  
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Software" ) "SoftwareFinished",'+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Software" ) "SoftwareProgress",'+
-                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type="Others" ) "OtherProgress",(select count(*)'+
-                      ' from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type="Others" ) "OtherFinished"  from users u ,request r WHERE u.username=r.workerusername and DATE_FORMAT(r.assignedDate,"%d-%m-%y") between ? and  ? group  by u.username '
+                        '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Computer%" ) "ComputerProgress",'+ 
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Computer%" ) "ComputerFinished",'+
+                      '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Printer%" ) "PrinterProgress",'+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Printer%" ) "PrinterFinished" ,'+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Photocopy%" ) "PhotoCopyFinished",'+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Photocopy%" ) "PhotoCopyProgress", '+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Network%" ) "NetworkProgress",'+
+                      '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Network%" ) "NetworkFinished",'+  
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Software%" ) "SoftwareFinished",'+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Software%" ) "SoftwareProgress",'+
+                       '(select count(*) from request r where r.workerusername=u.username and r.status ="Work On Progress" AND r.request_type like "%Others%" ) "OtherProgress",(select count(*)'+
+                      ' from request r where r.workerusername=u.username and r.status ="finished" AND r.request_type like "%Others%" ) "OtherFinished"  from users u ,request r WHERE u.username=r.workerusername and DATE_FORMAT(r.assignedDate,"%d-%m-%y") between ? and  ? group  by u.username '
   Connection.query(performance,[startDate,endDate],(err,result)=>{
       res.send(result)
   })

@@ -9,9 +9,7 @@ router.post('/AddOffice',(req,res)=>{
     const insertoffice='insert into office(office_name,floor_no,phone) values (?,?,?)'
     
     Connection.query(insertoffice,[office_name,floor_no,phone],(err,result)=>{
-        res.send(result);
-        console.log(err)
-       
+        res.send(result);       
        
     })
 })

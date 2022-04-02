@@ -1,7 +1,7 @@
 var express = require('express');
 const router=express.Router()
-//const bcrypt=require('bcrypt');
-const bcrypt1=require('bcrypt-nodejs');
+const bcrypt=require('bcrypt');
+//const bcrypt1=require('bcrypt-nodejs');
 const saltRound=10
 const cookieParser=require('cookie-parser')
 const session=require('express-session')
@@ -58,7 +58,7 @@ router.post('/Login',(req,res)=>{
             res.send({err:err})
         }else{
             if(result.length > 0){
-                bcrypt1.compare(password,result[0].password,(err,response)=>{
+                bcrypt.compare(password,result[0].password,(err,response)=>{
                     if(response){
                         req.session.user=result
                         
@@ -136,7 +136,7 @@ router.post('/Register',(req,res,next)=>{
             res.send({Message:"error"})
         }
         else{
-            bcrypt1.hash(password,saltRound,null,(err,hash)=>{
+            bcrypt.hash(password,saltRound,(err,hash)=>{
                 if(err){
                     res.send({Message:"error"})
                    
