@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2022 at 08:30 PM
+-- Generation Time: Apr 02, 2022 at 10:16 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.3.29
 
@@ -47,6 +47,13 @@ CREATE TABLE `office` (
   `phone` int(250) NOT NULL,
   `Date` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `office`
+--
+
+INSERT INTO `office` (`office_id`, `office_name`, `floor_no`, `phone`, `Date`) VALUES
+(63, 'ወሳኝ ኩነት መመዝገቢያ', 1, 949050454, '2022-04-02 11:47:57');
 
 -- --------------------------------------------------------
 
@@ -124,7 +131,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userid`, `office_id`, `username`, `password`, `ROLES`, `user_fullname`, `age`, `Gender`, `division`, `floor_no`, `office_no`, `Position`, `Phone`, `Date`, `status`) VALUES
-(53, NULL, 'mamar', '$2b$10$OKc23cYQNXgteSKm95f/muZk6WrAaF9ZQwS0MCc9csnlY2G1xw6X6', 'Admin', 'Mamar Habtamu m', '55', 'Male', 'dfffsdf', '2', '3', 'dgfgdgdfgd', '45756755566', '2022-03-15 13:36:43', 'unblock');
+(53, NULL, 'mamar', '$2b$10$OKc23cYQNXgteSKm95f/muZk6WrAaF9ZQwS0MCc9csnlY2G1xw6X6', 'Admin', 'Mamar Habtamu m ', '55', 'Male', 'dfffsdf ', '2', NULL, 'dgfgdgdfgd ', '4575675554', '2022-03-15 13:36:43', 'unblock'),
+(80, 63, 'estifanos', '$2b$10$ISyvlYlwaG3VwQjyj4bwNeSNAE3N1BTSHPhO9zFXGLmch7amqlN2a', 'Employee', 'estifanos jemberu', '', 'Male', 'Networki', '1', '', '', '9809809809', '2022-04-02 11:55:18', 'unblock');
 
 --
 -- Indexes for dumped tables
@@ -184,7 +192,7 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT for table `office`
 --
 ALTER TABLE `office`
-  MODIFY `office_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `office_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `request`
@@ -208,7 +216,7 @@ ALTER TABLE `standard`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- Constraints for dumped tables
