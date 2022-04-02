@@ -33,7 +33,7 @@ router.post('/AddRequest/:requesterusername',(req,res)=>{
 // Get All Request 
 router.get('/GetAllRequest',(req,res)=>{
   const getrequest='select r.request_id, r.requesterusername,r.workerusername,u.division,u.floor_no,u.office_no,r.Assignedby,'+
-       ' u.phone,r.request_type,r.problem_desc,r.status,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") assignedDate,'+
+       ' u.phone,r.request_type,r.problem_desc,r.status,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") assignedDate, r.comment,r.satisfaction,'+
        'DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") finishedDate,DATE_FORMAT (r.Date,"%d/%m/%y %h:%m:%s")Date'+
        ' from request r,users u where r.requesterusername=u.username order by DATE_FORMAT(r.finishedDate,"%d/%m/%y %h:%m:%s") desc'
   Connection.query(getrequest,(err,result)=>{
