@@ -290,14 +290,14 @@ router.get('/FinishedTasksWithSatisfaction/:requesterusername',(req,res)=>{
 //Progress Tasks for Requester
 router.get('/ProgressTasksForRequester/:requesterusername',(req,res)=>{
   const requesterusername=req.params.requesterusername
-  const progreassTask='select count(*) "ProgressTask", r.request_id,r.status,u.user_fullname,'+
+  const progreassTask='select  r.request_id,r.status,u.user_fullname,'+
   'u.Position,u.Gender,u.Phone ,DATE_FORMAT(r.Date,"%d/%m/%y %h:%m:%s") as Date,'+
  ' r.request_type,r.problem_desc ,DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") assignedDate,'+
  ' r.finishedDate,r.satisfaction from  request r,users u where  r.workerusername=u.username  '+
   'and r.requesterusername=? and r.status ="Work On Progress" order by DATE_FORMAT(r.assignedDate,"%d/%m/%y %h:%m:%s") desc'
   Connection.query(progreassTask,[requesterusername],(err,result)=>{
       if(err){
-          res.send(err)
+          res.send({Message: "Error"})
       }else{
           res.send(result)
       }
