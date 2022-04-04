@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2022 at 10:16 PM
+-- Generation Time: Apr 04, 2022 at 08:15 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.3.29
 
@@ -33,6 +33,13 @@ CREATE TABLE `announcement` (
   `anounceDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `announcement`
+--
+
+INSERT INTO `announcement` (`anouncid`, `anounceName`, `anounceDate`, `status`) VALUES
+(13, 'እባክዎን መለያና ፓስወርድ አይርሱ', '2022-04-04 16:46:27', 'New');
 
 -- --------------------------------------------------------
 
@@ -75,6 +82,13 @@ CREATE TABLE `request` (
   `finishedDate` datetime DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `request`
+--
+
+INSERT INTO `request` (`request_id`, `workerusername`, `requesterusername`, `Assignedby`, `request_type`, `problem_desc`, `status`, `satisfaction`, `Date`, `assignedDate`, `finishedDate`, `comment`) VALUES
+(130, NULL, 'solomon', NULL, 'Computer,Network,Software,Printer', 'fghfgh', 'New', NULL, '2022-04-04 17:33:57', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -132,7 +146,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`userid`, `office_id`, `username`, `password`, `ROLES`, `user_fullname`, `age`, `Gender`, `division`, `floor_no`, `office_no`, `Position`, `Phone`, `Date`, `status`) VALUES
 (53, NULL, 'mamar', '$2b$10$OKc23cYQNXgteSKm95f/muZk6WrAaF9ZQwS0MCc9csnlY2G1xw6X6', 'Admin', 'Mamar Habtamu m ', '55', 'Male', 'dfffsdf ', '2', NULL, 'dgfgdgdfgd ', '4575675554', '2022-03-15 13:36:43', 'unblock'),
-(80, 63, 'estifanos', '$2b$10$ISyvlYlwaG3VwQjyj4bwNeSNAE3N1BTSHPhO9zFXGLmch7amqlN2a', 'Employee', 'estifanos jemberu', '', 'Male', 'Networki', '1', '', '', '9809809809', '2022-04-02 11:55:18', 'unblock');
+(81, 63, 'solomon', '$2b$10$nIZk4wI9fatH4mcwRGnoG.tLbHuw//NjlcqjGGSXaCAz8EwqMP8Y.', 'Employee', 'Solomon Tadele', '', 'Male', 'wosagni kunet memezegbiYa', '1', '', '', '678697898', '2022-04-04 09:45:31', 'unblock');
 
 --
 -- Indexes for dumped tables
@@ -186,7 +200,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `anouncid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `anouncid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `office`
@@ -198,7 +212,7 @@ ALTER TABLE `office`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `request_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+  MODIFY `request_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT for table `requestwithstandard`
@@ -210,13 +224,13 @@ ALTER TABLE `requestwithstandard`
 -- AUTO_INCREMENT for table `standard`
 --
 ALTER TABLE `standard`
-  MODIFY `standardid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `standardid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- Constraints for dumped tables
