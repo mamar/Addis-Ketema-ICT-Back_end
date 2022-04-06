@@ -2,9 +2,9 @@ const bodyParser = require('body-parser');
 const express=require('express');
 const app=express();
 const cors=require('cors');
-const etdate = require('ethiopic-date');
-const date=require('date-and-time')
-const format = require('date-format');
+//const etdate = require('ethiopic-date');
+//const date=require('date-and-time')
+//const format = require('date-format');
 const office=require('./Office')
 const standard=require('./Standard')
 const  Users=require('./Users')
@@ -14,16 +14,17 @@ const Announce=require('./Announce')
 //create app server
 var server = app.listen( process.env.port || 5000  ,function () {
 
-    var host = server.address().address
+   // var host = server.address().address
     var port = server.address().port
+    console.log("Example app listening a" , port)
   
-    console.log("Example app listening at http://%s:%s", host, port)
-    const now=etdate.now()
-    console.log(now)
-    console.log(format.asString('dd/mm/yyyy hh:mm:ss', new Date()));
+   // console.log("Example app listening at http://%s:%s", host, port)
+    //const now=etdate.now()
+    //console.log(now)
+   /*  console.log(format.asString('dd/mm/yyyy hh:mm:ss', new Date()));
     const now1=new Date()    
     const Date1 = date.format(now1,'YYYY-MM-DD HH:mm:ss');
-    console.log(Date1)
+    console.log(Date1) */
   
   });
 //start body-parser configuration
