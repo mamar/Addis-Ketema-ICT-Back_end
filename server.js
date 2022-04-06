@@ -12,7 +12,7 @@ const Request=require('./Request')
 const Announce=require('./Announce')
 
 //create app server
-var server = app.listen( process.env.port || 8080  ,  "127.0.0.1", function () {
+var server = app.listen( process.env.port || 5000  ,  "http://localhost", function () {
 
     var host = server.address().address
     var port = server.address().port
@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 app.use(cors({
-    origin:["http://www.erp.com:300","http://erp.com:500","http://localhost:3000","http://addiserp.com:600"],
+    origin:["'http://addiserp.com:400","http://localhost:3000","http://127.0.0.1:3000"],
     methods:["Get","Post","DELETE","PUT","put","PATCH","patch"],
     credentials:true
 }));

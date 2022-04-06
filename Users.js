@@ -1,6 +1,6 @@
 var express = require('express');
 const router=express.Router()
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 //const bcrypt1=require('bcrypt-nodejs');
 const saltRound=10
 const cookieParser=require('cookie-parser')
