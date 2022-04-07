@@ -12,11 +12,11 @@ const Request=require('./Request')
 const Announce=require('./Announce')
 
 //create app server
-var server = app.listen( process.env.port || 5000 ,function () {
+var server = app.listen( process.env.port || 5000, '0.0.0.0',function () {
 
    var host = server.address().address
     var port = server.address().port
-    console.log("Example app listening a on http://%:%" , port)
+    console.log('Example app listening a on http://%%:%%' ,host, port)
   
    // console.log("Example app listening at http://%s:%s", host, port)
     //const now=etdate.now()
