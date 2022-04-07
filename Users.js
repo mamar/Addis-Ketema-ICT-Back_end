@@ -11,7 +11,7 @@ const Connection=require('./Database')
   router.use(cookieParser())
   //-momery unleaked---------
  app.set('trust proxy', 1);
-/*   router.use(session({
+  router.use(session({
       key: 'userid',
       secret:'mamar',
       resave:false,
@@ -21,36 +21,7 @@ const Connection=require('./Database')
       }
   
   }))
- */
 
-  /* const verifyJWT=(req,res,netxt)=>{
-    const token =req.headers("x-access-token")
-    if(!token){
-        res.send("We need a token ")
-
-    }else{
-        jwt.verify(token,"jwtsecre",(err,decode)=>{
-            if(err){
-                res.json({auth:falese,message:"Failed to authonticate"})
-                
-            }else{
-                req.userid=decode.id
-                netxt()
-
-            }
-        })
-    }
-} */
-/* router.get('/isuserauth',verifyJWT,(req,res)=>{
-    res.send("You are authonticated")
-}) 
-router.get('/login',(req,res)=>{
-    if(req.session.user){
-        res.send({loggedin:true,user:req.session.user})
-    }else{
-        res.send({loggedin:false,message:"authontication failed"})
-    }
-}) */
 router.post('/Login',(req,res)=>{
     const username=req.body.username
     const password=req.body.password
