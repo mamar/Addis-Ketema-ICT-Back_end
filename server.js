@@ -2,6 +2,9 @@ const bodyParser = require('body-parser');
 const express=require('express');
 const app=express();
 const cors=require('cors');
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
+
 //const etdate = require('ethiopic-date');
 //const date=require('date-and-time')
 const format = require('date-format');
@@ -10,6 +13,17 @@ const standard=require('./Standard')
 const  Users=require('./Users')
 const Request=require('./Request')
 const Announce=require('./Announce')
+
+//session 
+
+app.use(session({
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  resave: false,
+  secret: 'keyboard cat'
+}))
 
 //create app server
 var server = app.listen( process.env.port || 5000, '0.0.0.0',function () {

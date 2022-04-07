@@ -5,21 +5,21 @@ const bcrypt=require('bcryptjs');
 const saltRound=10
 const cookieParser=require('cookie-parser')
 const session=require('express-session')
+const MemoryStore = require('memorystore')(session)
 const Connection=require('./Database')
 
 
   router.use(cookieParser())
 
-  router.use(session({
-      key: 'userid',
-      secret:'mamar',
-      resave:false,
-      saveUninitialized:false,
-      cookie:{
-          express:60*60*24
-      }
-  
+  app.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    secret: 'keyboard cat'
   }))
+  
 
 router.post('/Login',(req,res)=>{
     const username=req.body.username
