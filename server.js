@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const express=require('express');
 const app=express();
+const path = require('path')
 const cors=require('cors');
 //const etdate = require('ethiopic-date');
 //const date=require('date-and-time')
@@ -10,9 +11,10 @@ const standard=require('./Standard')
 const  Users=require('./Users')
 const Request=require('./Request')
 const Announce=require('./Announce')
+const PORT =process.env.port || 5000
 
 //create app server
-var server = app.listen( process.env.port || 5000  ,function () {
+/* var server = app.listen( process.env.port || 5000  ,function () {
 
    // var host = server.address().address
     var port = server.address().port
@@ -26,7 +28,14 @@ var server = app.listen( process.env.port || 5000  ,function () {
     const Date1 = date.format(now1,'YYYY-MM-DD HH:mm:ss');
     console.log(Date1) */
   
-  });
+  //}) 
+  
+  express()
+  .use(express.static(path.join(__dirname, 'public')))
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'ejs')
+  .get('/', (req, res) => res.render('pages/index'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 //start body-parser configuration
 app.use( express.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
