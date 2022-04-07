@@ -8,7 +8,7 @@ var Connection=mysql.createPool({
     password:"1DP4vbkGZC",
     database:"V8C3p0QyK2"
 })
-Connection.connect(function(err) {
+Connection.getConnection(function(err) {
     
     if (err) throw err
 
