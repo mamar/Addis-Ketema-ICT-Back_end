@@ -9,8 +9,7 @@ const Connection=require('./Database')
 
 
   router.use(cookieParser())
-  //-momery unleaked---------
- app.set('trust proxy', 1);
+
   router.use(session({
       key: 'userid',
       secret:'mamar',
