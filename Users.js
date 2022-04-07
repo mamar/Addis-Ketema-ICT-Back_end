@@ -10,7 +10,7 @@ const Connection=require('./Database')
 
   router.use(cookieParser())
 
-  /* router.use(session({
+  router.use(session({
       key: 'userid',
       secret:'mamar',
       resave:false,
@@ -19,7 +19,7 @@ const Connection=require('./Database')
           express:60*60*24
       }
   
-  })) */
+  }))
 
 router.post('/Login',(req,res)=>{
     const username=req.body.username
