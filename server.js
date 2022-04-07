@@ -14,6 +14,7 @@ const  Users=require('./Users')
 const Request=require('./Request')
 const Announce=require('./Announce')
 
+app.set('trust proxy', 1);
 //session 
 app.use(session({
   cookie: { maxAge: 86400000 },
