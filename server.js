@@ -4,27 +4,19 @@ const app=express();
 const cors=require('cors');
 //const etdate = require('ethiopic-date');
 //const date=require('date-and-time')
-//const format = require('date-format');
+const format = require('date-format');
 const office=require('./Office')
 const standard=require('./Standard')
 const  Users=require('./Users')
 const Request=require('./Request')
 const Announce=require('./Announce')
-//heroku
-const cool = require('cool-ascii-faces');
-const path = require('path');
-const PORT = process.env.PORT || 5000;
-
-
 
 //create app server
-/* var server = app.listen( PORT  ,function () {
+var server = app.listen( process.env.port || 5000  ,function () {
 
    // var host = server.address().address
     var port = server.address().port
     console.log("Example app listening a" , port)
- */
-
   
    // console.log("Example app listening at http://%s:%s", host, port)
     //const now=etdate.now()
@@ -34,14 +26,7 @@ const PORT = process.env.PORT || 5000;
     const Date1 = date.format(now1,'YYYY-MM-DD HH:mm:ss');
     console.log(Date1) */
   
-  //});
-  express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('./server.js'))
-  .get('/cool', (req, res) => res.send(cool()))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+  });
 //start body-parser configuration
 app.use( express.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
