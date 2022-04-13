@@ -27,7 +27,7 @@ app.use(session({
 }))
 
 //create app server
-var server = app.listen( process.env.port || 5000, '0.0.0.0',function () {
+var server = app.listen( process.env.port || 5000, '127.0.0.1',function () {
 
    var host = server.address().address
     var port = server.address().port
