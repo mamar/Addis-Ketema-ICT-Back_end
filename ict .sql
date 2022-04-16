@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2022 at 08:15 PM
+-- Generation Time: Apr 16, 2022 at 07:25 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 7.3.29
 
@@ -39,7 +39,7 @@ CREATE TABLE `announcement` (
 --
 
 INSERT INTO `announcement` (`anouncid`, `anounceName`, `anounceDate`, `status`) VALUES
-(13, 'እባክዎን መለያና ፓስወርድ አይርሱ', '2022-04-04 16:46:27', 'New');
+(14, 'Please Dont Forget Your username and password', '2022-04-07 21:13:53', 'New');
 
 -- --------------------------------------------------------
 
@@ -60,7 +60,7 @@ CREATE TABLE `office` (
 --
 
 INSERT INTO `office` (`office_id`, `office_name`, `floor_no`, `phone`, `Date`) VALUES
-(63, 'ወሳኝ ኩነት መመዝገቢያ', 1, 949050454, '2022-04-02 11:47:57');
+(65, 'Neged Tshefet bet', 1, 949050454, '2022-04-07 13:42:21');
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,8 @@ CREATE TABLE `request` (
 --
 
 INSERT INTO `request` (`request_id`, `workerusername`, `requesterusername`, `Assignedby`, `request_type`, `problem_desc`, `status`, `satisfaction`, `Date`, `assignedDate`, `finishedDate`, `comment`) VALUES
-(130, NULL, 'solomon', NULL, 'Computer,Network,Software,Printer', 'fghfgh', 'New', NULL, '2022-04-04 17:33:57', NULL, NULL, NULL);
+(131, 'lelise', 'solomon', 'mamar', 'Computer,Printer', 'ኮምፒዩተሬ አይከፍትም', 'finished', '80', '2022-04-07 21:14:44', '2022-04-07 14:17:05', '2022-04-07 14:20:50', 'በጣም ነዉ የማመሰግነዉ .አገልግቱ ፈጣን ነበር'),
+(132, 'lelise', 'solomon', 'Self', 'Computer', 'hi there\n', 'finished', '80', '2022-04-13 21:40:54', '2022-04-13 14:41:22', '2022-04-13 14:41:44', 'teru new\n');
 
 -- --------------------------------------------------------
 
@@ -101,6 +102,14 @@ CREATE TABLE `requestwithstandard` (
   `requestid` int(250) NOT NULL,
   `standardid` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `requestwithstandard`
+--
+
+INSERT INTO `requestwithstandard` (`requestwithstandardid`, `requestid`, `standardid`) VALUES
+(19, 131, 6),
+(20, 132, 6);
 
 -- --------------------------------------------------------
 
@@ -115,6 +124,13 @@ CREATE TABLE `standard` (
   `time` varchar(255) NOT NULL,
   `price` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `standard`
+--
+
+INSERT INTO `standard` (`standardid`, `service`, `measurement`, `time`, `price`) VALUES
+(6, 'Network Configuration ', 'day ', '1 ', '100 ');
 
 -- --------------------------------------------------------
 
@@ -146,7 +162,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`userid`, `office_id`, `username`, `password`, `ROLES`, `user_fullname`, `age`, `Gender`, `division`, `floor_no`, `office_no`, `Position`, `Phone`, `Date`, `status`) VALUES
 (53, NULL, 'mamar', '$2b$10$OKc23cYQNXgteSKm95f/muZk6WrAaF9ZQwS0MCc9csnlY2G1xw6X6', 'Admin', 'Mamar Habtamu m ', '55', 'Male', 'dfffsdf ', '2', NULL, 'dgfgdgdfgd ', '4575675554', '2022-03-15 13:36:43', 'unblock'),
-(81, 63, 'solomon', '$2b$10$nIZk4wI9fatH4mcwRGnoG.tLbHuw//NjlcqjGGSXaCAz8EwqMP8Y.', 'Employee', 'Solomon Tadele', '', 'Male', 'wosagni kunet memezegbiYa', '1', '', '', '678697898', '2022-04-04 09:45:31', 'unblock');
+(81, NULL, 'solomon', '$2b$10$nIZk4wI9fatH4mcwRGnoG.tLbHuw//NjlcqjGGSXaCAz8EwqMP8Y.', 'Employee', 'Solomon Tadele', '', 'Male', 'wosagni kunet memezegbiYa', '1', '', '', '678697898', '2022-04-04 09:45:31', 'unblock'),
+(82, 65, 'wubeshet', '$2a$10$nyjUInoSJZbyghrDpzRkW.tN3WgyzE.3MMTKRUs68xx7KZU4l6mWG', 'Admin', 'Wubeshet Derecha', '', 'Male', '', '1', NULL, NULL, '0949050454 ', '2022-04-07 13:44:51', 'unblock'),
+(83, 65, 'lelise', '$2a$10$fcCb4KMb5O.8ob88H4pZ2eqOq99GKRegUhxpBW0Uh4qIQv7/toqKm', 'IT', 'ሌሊሴ  ኢዶሳ ', '', 'Female', 'ሲሰተም አስተዳደር', '1', '', 'ሲሰተም አስተዳደር', '0949050454', '2022-04-07 14:16:54', 'unblock');
 
 --
 -- Indexes for dumped tables
@@ -200,37 +218,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `anouncid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `anouncid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `office`
 --
 ALTER TABLE `office`
-  MODIFY `office_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `office_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `request_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `request_id` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT for table `requestwithstandard`
 --
 ALTER TABLE `requestwithstandard`
-  MODIFY `requestwithstandardid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `requestwithstandardid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `standard`
 --
 ALTER TABLE `standard`
-  MODIFY `standardid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `standardid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `userid` int(250) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- Constraints for dumped tables
